@@ -36,9 +36,10 @@ async function main() {
   app.use(morgan('dev'));
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-  app.get('/api/health', (req, res) =>
-    res.json({ ok: true, aiMode: aiMode(), time: new Date().toISOString() })
-  );
+  const health = (req, res) =>
+    res.json({ ok: true, aiMode: aiMode(), time: new Date().toISOString() });
+  app.get('/', health); // Render probes HEAD / for open-port + health checks
+  app.get('/api/health', health);
 
   app.use('/api/auth', authRoutes);
   app.use('/api/cases', caseRoutes);
